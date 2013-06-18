@@ -13,6 +13,7 @@ CFLAGS	?= -ansi -O2 -fomit-frame-pointer
 override CFLAGS += -W -Wall -D_GNU_SOURCE
 STATIC	=
 MANDB	:= s@^\('\\\\\"\)[^\*-]*-\*- coding: [^[:blank:]]\+ -\*-@\1@
+ROOT = $(DESTDIR)
 
 #
 # Leave empty if the mountpoint(1) command from util-linux 2.20
