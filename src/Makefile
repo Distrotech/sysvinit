@@ -24,18 +24,25 @@ MNTPOINT=
 # For some known distributions we do not build all programs, otherwise we do.
 BIN	=
 SBIN	= init halt shutdown runlevel killall5 fstab-decode
-USRBIN	= last mesg
+USRBIN  =
 
-MAN1	= last.1 lastb.1 mesg.1
+MAN1	=
 MAN5	= initscript.5 inittab.5
 MAN8	= halt.8 init.8 killall5.8 pidof.8 poweroff.8 reboot.8 runlevel.8
 MAN8	+= shutdown.8 telinit.8 fstab-decode.8
 
 ifeq ($(DISTRO),)
 SBIN	+= sulogin bootlogd
-USRBIN	+= utmpdump wall
-MAN1	+= utmpdump.1 wall.1
+USRBIN	+= utmpdump wall last mesg
+MAN1	+= utmpdump.1 wall.1 last.1 lastb.1 mesg.1
 MAN8	+= sulogin.8 bootlogd.8
+endif
+
+ifeq ($(DISTRO),Distrotech)
+CPPFLAGS+= -DACCTON_OFF
+SBIN	+= bootlogd
+MAN8	+= bootlogd.8
+MANDB	:=
 endif
 
 ifeq ($(DISTRO),Debian)
@@ -177,7 +184,7 @@ install:
 		ln -sf halt $(ROOT)/sbin/poweroff
 		ln -sf init $(ROOT)/sbin/telinit
 		ln -sf /sbin/killall5 $(ROOT)/bin/pidof
-		if [ ! -f $(ROOT)/usr/bin/lastb ]; then \
+		if [ ! -f $(ROOT)/usr/bin/lastb ] && [ -e $(ROOT)/usr/bin/last ]; then \
 			ln -sf last $(ROOT)/usr/bin/lastb; \
 		fi
 		$(INSTALL_DIR) $(ROOT)/usr/include/
